@@ -11,7 +11,7 @@
 #import <OCMock/OCMock.h>
 
 @interface LJSShakingAlertView (TestVisibility) <UIAlertViewDelegate>
-
+- (void)tappedButtonAtIndex:(NSInteger)index;
 @end
 
 @interface LJSShakingAlertViewTests : XCTestCase
@@ -93,7 +93,7 @@
     id sutMock = [self partialMockShakingAlertView:_sut stubbedWithSecureTextFieldWithText:@"password"];
     
     // "tap OK button"
-    [[sutMock delegate] alertView:sutMock clickedButtonAtIndex:1];
+    [[sutMock delegate] tappedButtonAtIndex:1];
     
     XCTAssertTrue(completionBlockWasCalled, @"");
     XCTAssertTrue(capturedTextEntryWasCorrectValue, @"");
@@ -114,7 +114,7 @@
     [[sutMock expect] dismissWithClickedButtonIndex:1 animated:YES];
     
     // "tap OK button"
-    [sutMock alertView:sutMock clickedButtonAtIndex:1];
+    [sutMock tappedButtonAtIndex:1];
     
     [sutMock verify];
 }
@@ -134,7 +134,7 @@
     id sutMock = [self partialMockShakingAlertView:_sut stubbedWithSecureTextFieldWithText:@"incorrect-secure-text"];
     
     // "tap OK button"
-    [sutMock alertView:sutMock clickedButtonAtIndex:1];
+    [sutMock tappedButtonAtIndex:1];
     
     XCTAssertFalse(completionBlockWasCalled, @"");
 }
@@ -155,7 +155,7 @@
     [[sutMock reject] dismissWithClickedButtonIndex:1 animated:YES];
     
     // "tap OK button"
-    [sutMock alertView:sutMock clickedButtonAtIndex:1];
+    [sutMock tappedButtonAtIndex:1];
     
     [sutMock verify];
 }
@@ -194,7 +194,7 @@
     
     
     // "tap Cancel button"
-    [_sut alertView:_sut clickedButtonAtIndex:_sut.cancelButtonIndex];
+    [_sut tappedButtonAtIndex:_sut.cancelButtonIndex];
     
     XCTAssertTrue(completionBlockWasCalled, @"");
     XCTAssertFalse(capturedTextEntryWasCorrectValue, @"");

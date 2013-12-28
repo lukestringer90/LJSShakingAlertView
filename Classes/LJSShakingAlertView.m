@@ -8,7 +8,7 @@
 
 #import "LJSShakingAlertView.h"
 
-@interface LJSShakingAlertView () <UIAlertViewDelegate>
+@interface LJSShakingAlertView () <SDCAlertViewDelegate>
 @property (nonatomic, strong, readwrite) NSString *secretText;
 @property (nonatomic, copy, readwrite) void (^completionHandler)(BOOL textEntryWasCorrect);
 @property (nonatomic, strong, readwrite) NSString *cancelButtonTitle;
@@ -43,20 +43,19 @@
     return self;
 }
 
-#pragma mark - UIAlertViewDelegate
+#pragma mark - SDCAlertViewDelegate
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (self.cancelButtonIndex == buttonIndex) {
-        [self safeCallCompletionHandlerWithTextEntryWasCorrect:NO];
-    }
-    else {
+- (BOOL)alertView:(SDCAlertView *)alertView shouldDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if ([[self buttonTitleAtIndex:buttonIndex] isEqualToString:self.otherButtonTitle]) {
         UITextField *secureTextField = [self textFieldAtIndex:0];
         BOOL textEntryWasCorrect = [secureTextField.text isEqualToString:self.secretText];
         if (textEntryWasCorrect) {
-            [self dismissWithClickedButtonIndex:buttonIndex animated:YES];
             [self safeCallCompletionHandlerWithTextEntryWasCorrect:YES];
         }
+        return textEntryWasCorrect;
     }
+    [self safeCallCompletionHandlerWithTextEntryWasCorrect:NO];
+    return YES;
 }
 
 #pragma mark - Private

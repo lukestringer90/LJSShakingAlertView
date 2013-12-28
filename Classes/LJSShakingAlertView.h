@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <SDCAlertView/SDCAlertView.h>
+#import "SDCAlertView.h"
 
 @interface LJSShakingAlertView : SDCAlertView
 

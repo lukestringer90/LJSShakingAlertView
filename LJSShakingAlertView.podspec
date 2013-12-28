@@ -1,4 +1,4 @@
-Pod::Spec.new do |s|
+ Pod::Spec.new do |s|
   s.name         = "LJSShakingAlertView"
   s.version      = "2.0.0"
   s.platform     =  :ios, '7.0'
@@ -9,10 +9,10 @@ Pod::Spec.new do |s|
   s.author       = { "Luke Stringer" => "lukestringer630@gmail.com" }
   s.source       = { :git => "https://github.com/stringer630/LJSShakingAlertView.git", :tag => "#{s.version}" }
   s.ios.deployment_target = '7.0'
-  s.source_files = 'Classes'
+  s.source_files = 'Classes', 'SDCAlertView'
+  s.public_header_files = "Classes"
   s.requires_arc = true
-  
-  s.dependency 'SDCAlertView'
+
   s.dependency 'SDCAutoLayout'
   s.dependency 'RBBAnimation'
 end
