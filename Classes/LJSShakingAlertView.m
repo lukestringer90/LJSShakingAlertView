@@ -7,12 +7,14 @@
 //
 
 #import "LJSShakingAlertView.h"
+#import "LJSAlertViewShaker.h"
 
 @interface LJSShakingAlertView () <SDCAlertViewDelegate>
 @property (nonatomic, strong, readwrite) NSString *secretText;
 @property (nonatomic, copy, readwrite) void (^completionHandler)(BOOL enteredCorrectText);
 @property (nonatomic, strong, readwrite) NSString *cancelButtonTitle;
 @property (nonatomic, strong, readwrite) NSString *otherButtonTitle;
+@property (nonatomic, strong) LJSAlertViewShaker *alertViewShaker;
 @end
 
 @implementation LJSShakingAlertView
@@ -34,11 +36,12 @@
               otherButtonTitles:otherButtonTitle, nil];
     
     if (self) {
-        self.alertViewStyle = UIAlertViewStyleSecureTextInput;
         self.secretText = secretText;
         self.completionHandler = completion;
         self.cancelButtonTitle = cancelButtonTitle;
         self.otherButtonTitle = otherButtonTitle;
+        self.alertViewStyle = UIAlertViewStyleSecureTextInput;
+        self.alertViewShaker = [[LJSAlertViewShaker alloc] init];
     }
     return self;
 }
@@ -56,6 +59,7 @@
         }
         else {
             secureTextField.text = nil;
+            [self.alertViewShaker shakeAlertView:self];
         }
         return enteredCorrectText;
         
