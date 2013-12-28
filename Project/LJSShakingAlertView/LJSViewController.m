@@ -9,10 +9,10 @@
 #import "LJSViewController.h"
 #import <LJSShakingAlertView/LJSShakingAlertView.h>
 
-typedef NS_ENUM(NSInteger, TableViewRow) {
-    TableViewRowShowAlertView,
-    TableViewRowTextEntryStatus,
-    TableViewRowCount
+typedef NS_ENUM(NSInteger, TableViewGroup) {
+    TableGroupRowShowAlertView,
+    TableViewGrouoTextEntryStatus,
+    TableGroupRowCount
     
 };
 
@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, TableViewRow) {
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == TableViewRowShowAlertView) {
+    if (indexPath.section == TableGroupRowShowAlertView) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         [self showShakingAlertView];
     }
@@ -38,12 +38,20 @@ typedef NS_ENUM(NSInteger, TableViewRow) {
 
 #pragma mark - UITableViewDataSource
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == TableGroupRowShowAlertView) {
+        return CGRectGetHeight(self.tableView.frame) / 2 - [tableView.delegate tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    }
+    
+    return [super tableView:tableView heightForHeaderInSection:section];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return TableGroupRowCount;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return TableViewRowCount;
+	return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -53,11 +61,11 @@ typedef NS_ENUM(NSInteger, TableViewRow) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellID];
     }
     
-    switch (indexPath.row) {
-        case TableViewRowShowAlertView:
+    switch (indexPath.section) {
+        case TableGroupRowShowAlertView:
             cell.textLabel.text = @"Show LJSShakingAlertView";
             break;
-        case TableViewRowTextEntryStatus:
+        case TableViewGrouoTextEntryStatus:
             cell.textLabel.text = [NSString stringWithFormat:@"Status: %@", self.entryStatusText];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             break;
