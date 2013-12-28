@@ -34,7 +34,7 @@
 #pragma mark - Initialisation tests
 
 - (void)testInitialisesWithStoredProperties {
-    void (^completion)(BOOL textEntryWasCorrect) = ^void(BOOL textEntryWasCorrect) {};
+    void (^completion)(BOOL enteredCorrectText) = ^void(BOOL enteredCorrectText) {};
     
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
                                               message:@"Message."
@@ -57,7 +57,7 @@
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
                                               message:@"Message."
                                            secretText:@"password"
-                                           completion:^void(BOOL textEntryWasCorrect) {}
+                                           completion:^void(BOOL enteredCorrectText) {}
                                     cancelButtonTitle:@"Cancel"
                                      otherButtonTitle:@"OK"];
     
@@ -68,7 +68,7 @@
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
                                               message:@"Message."
                                            secretText:nil
-                                           completion:^void(BOOL textEntryWasCorrect) {}
+                                           completion:^void(BOOL enteredCorrectText) {}
                                     cancelButtonTitle:@"Cancel"
                                      otherButtonTitle:@"OK"];
     XCTAssertNil(_sut, @"");
@@ -78,13 +78,13 @@
 
 - (void)testCallsCompletionHandlerForCorrectTextEntry {
     __block BOOL completionBlockWasCalled;
-    __block BOOL capturedTextEntryWasCorrectValue;
+    __block BOOL capturedenteredCorrectTextValue;
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
                                               message:@"Message."
                                            secretText:@"password"
-                                           completion:^void(BOOL textEntryWasCorrect) {
+                                           completion:^void(BOOL enteredCorrectText) {
                                                completionBlockWasCalled = YES;
-                                               capturedTextEntryWasCorrectValue = textEntryWasCorrect;
+                                               capturedenteredCorrectTextValue = enteredCorrectText;
                                            }
                                     cancelButtonTitle:@"Cancel"
                                      otherButtonTitle:@"OK"];
@@ -96,7 +96,7 @@
     [[sutMock delegate] tappedButtonAtIndex:1];
     
     XCTAssertTrue(completionBlockWasCalled, @"");
-    XCTAssertTrue(capturedTextEntryWasCorrectValue, @"");
+    XCTAssertTrue(capturedenteredCorrectTextValue, @"");
 }
 
 - (void)testDoesNotCallsCompletionHandlerForIncorrectTextEntry {
@@ -104,7 +104,7 @@
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
                                               message:@"Message."
                                            secretText:@"password"
-                                           completion:^void(BOOL textEntryWasCorrect) {
+                                           completion:^void(BOOL enteredCorrectText) {
                                                completionBlockWasCalled = YES;
                                            }
                                     cancelButtonTitle:@"Cancel"
@@ -121,13 +121,13 @@
 
 - (void)testCallsCompletionHandlerWhenCancelled {
     __block BOOL completionBlockWasCalled;
-    __block BOOL capturedTextEntryWasCorrectValue;
+    __block BOOL capturedenteredCorrectTextValue;
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
                                               message:@"Message."
                                            secretText:@"password"
-                                           completion:^void(BOOL textEntryWasCorrect) {
+                                           completion:^void(BOOL enteredCorrectText) {
                                                completionBlockWasCalled = YES;
-                                               capturedTextEntryWasCorrectValue = textEntryWasCorrect;
+                                               capturedenteredCorrectTextValue = enteredCorrectText;
                                            }
                                     cancelButtonTitle:@"Cancel"
                                      otherButtonTitle:@"OK"];
@@ -137,7 +137,7 @@
     [_sut tappedButtonAtIndex:_sut.cancelButtonIndex];
     
     XCTAssertTrue(completionBlockWasCalled, @"");
-    XCTAssertFalse(capturedTextEntryWasCorrectValue, @"");
+    XCTAssertFalse(capturedenteredCorrectTextValue, @"");
 }
 
 #pragma mark - Dismissing alert view tests

@@ -12,14 +12,14 @@
 @interface LJSShakingAlertView : SDCAlertView
 
 @property (nonatomic, strong, readonly) NSString *secretText;
-@property (nonatomic, copy, readonly) void (^completionHandler)(BOOL textEntryWasCorrect);
+@property (nonatomic, copy, readonly) void (^completionHandler)(BOOL enteredCorrectText);
 @property (nonatomic, strong, readonly) NSString *cancelButtonTitle;
 @property (nonatomic, strong, readonly) NSString *otherButtonTitle;
 
 - (instancetype)initWithTitle:(NSString *)title
                       message:(NSString *)message
                    secretText:(NSString *)secretText
-                   completion:(void(^)(BOOL entryWasCorrect))completion
+                   completion:(void(^)(BOOL enteredCorrectText))completion
             cancelButtonTitle:(NSString *)cancelButtonTitle
              otherButtonTitle:(NSString *)otherButtonTitle;
 

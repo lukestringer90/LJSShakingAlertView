@@ -24,8 +24,8 @@
     alertView = [[LJSShakingAlertView alloc] initWithTitle:@"Enter Password"
                                                    message:@"To continue enter a valid password"
                                                 secretText:@"password"
-                                                completion:^(BOOL entryWasCorrect) {
-                                                    if (entryWasCorrect) {
+                                                completion:^(BOOL enteredCorrectText) {
+                                                    if (enteredCorrectText) {
                                                         NSLog(@"Correct!");
                                                     }
                                                     else {
