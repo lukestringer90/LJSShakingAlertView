@@ -174,7 +174,7 @@
     [[sutMock expect] dismissWithClickedButtonIndex:_sut.cancelButtonIndex animated:YES];
     
     // "tap OK button"
-    [sutMock alertView:sutMock clickedButtonAtIndex:_sut.cancelButtonIndex];
+    [sutMock tappedButtonAtIndex:_sut.cancelButtonIndex];
     
     [sutMock verify];
 }
