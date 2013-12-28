@@ -7,12 +7,17 @@
 //
 
 #import "LJSAppDelegate.h"
+#import "LJSViewController.h"
 
 @implementation LJSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    LJSViewController *viewController = [[LJSViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    self.window.rootViewController = viewController;
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 							
