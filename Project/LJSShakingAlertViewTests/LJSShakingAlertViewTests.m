@@ -99,26 +99,6 @@
     XCTAssertTrue(capturedTextEntryWasCorrectValue, @"");
 }
 
-- (void)testDismissesForCorrectTextEntry {
-    _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
-                                              message:@"Message."
-                                           secretText:@"password"
-                                           completion:nil
-                                    cancelButtonTitle:@"Cancel"
-                                     otherButtonTitle:@"OK"];
-    
-    // Stub the secure text field with a mock text field specific text
-    id sutMock = [self partialMockShakingAlertView:_sut stubbedWithSecureTextFieldWithText:@"password"];
-    
-    // Should be dismissed
-    [[sutMock expect] dismissWithClickedButtonIndex:1 animated:YES];
-    
-    // "tap OK button"
-    [sutMock tappedButtonAtIndex:1];
-    
-    [sutMock verify];
-}
-
 - (void)testDoesNotCallsCompletionHandlerForIncorrectTextEntry {
     __block BOOL completionBlockWasCalled = NO;
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
@@ -139,47 +119,7 @@
     XCTAssertFalse(completionBlockWasCalled, @"");
 }
 
-- (void)testDoesNotDismissForInCorrectTextEntry {
-    _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
-                                              message:@"Message."
-                                           secretText:@"password"
-                                           completion:nil
-                                    cancelButtonTitle:@"Cancel"
-                                     otherButtonTitle:@"OK"];
-    
-    // Stub the secure text field with a mock text field specific text
-    id sutMock = [self partialMockShakingAlertView:_sut stubbedWithSecureTextFieldWithText:@"incorrect-secure-text"];
-    
-    // Should not be dismissed
-    [[sutMock reject] dismissWithClickedButtonIndex:_sut.cancelButtonIndex animated:YES];
-    [[sutMock reject] dismissWithClickedButtonIndex:1 animated:YES];
-    
-    // "tap OK button"
-    [sutMock tappedButtonAtIndex:1];
-    
-    [sutMock verify];
-}
-
-- (void)testTappingCancelButtonDismissesAlertView {
-    _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
-                                              message:@"Message."
-                                           secretText:@"password"
-                                           completion:nil
-                                    cancelButtonTitle:@"Cancel"
-                                     otherButtonTitle:@"OK"];
-    
-    id sutMock = [OCMockObject partialMockForObject:_sut];
-    
-    // Should be dismissed
-    [[sutMock expect] dismissWithClickedButtonIndex:_sut.cancelButtonIndex animated:YES];
-    
-    // "tap OK button"
-    [sutMock tappedButtonAtIndex:_sut.cancelButtonIndex];
-    
-    [sutMock verify];
-}
-
-- (void)testCallsCompletionHandlerWhenDismissed {
+- (void)testCallsCompletionHandlerWhenCancelled {
     __block BOOL completionBlockWasCalled;
     __block BOOL capturedTextEntryWasCorrectValue;
     _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
@@ -200,5 +140,67 @@
     XCTAssertFalse(capturedTextEntryWasCorrectValue, @"");
 }
 
+#pragma mark - Dismissing alert view tests
+
+- (void)testTappingCancelButtonDismissesAlertView {
+    _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
+                                              message:@"Message."
+                                           secretText:@"password"
+                                           completion:nil
+                                    cancelButtonTitle:@"Cancel"
+                                     otherButtonTitle:@"OK"];
+    
+    id sutMock = [OCMockObject partialMockForObject:_sut];
+    
+    // Should be dismissed
+    [[sutMock expect] dismissWithClickedButtonIndex:_sut.cancelButtonIndex animated:YES];
+    
+    // "tap Cancel button"
+    [sutMock tappedButtonAtIndex:_sut.cancelButtonIndex];
+    
+    [sutMock verify];
+}
+
+
+- (void)testDoesNotDismissForIncorrectTextEntry {
+    _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
+                                              message:@"Message."
+                                           secretText:@"password"
+                                           completion:nil
+                                    cancelButtonTitle:@"Cancel"
+                                     otherButtonTitle:@"OK"];
+    
+    // Stub the secure text field with a mock text field specific text
+    id sutMock = [self partialMockShakingAlertView:_sut stubbedWithSecureTextFieldWithText:@"incorrect-secure-text"];
+    
+    // Should not be dismissed
+    [[sutMock reject] dismissWithClickedButtonIndex:_sut.cancelButtonIndex animated:YES];
+    [[sutMock reject] dismissWithClickedButtonIndex:1 animated:YES];
+    
+    // "tap OK button"
+    [sutMock tappedButtonAtIndex:1];
+    
+    [sutMock verify];
+}
+
+- (void)testDismissesForCorrectTextEntry {
+    _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
+                                              message:@"Message."
+                                           secretText:@"password"
+                                           completion:nil
+                                    cancelButtonTitle:@"Cancel"
+                                     otherButtonTitle:@"OK"];
+    
+    // Stub the secure text field with a mock text field specific text
+    id sutMock = [self partialMockShakingAlertView:_sut stubbedWithSecureTextFieldWithText:@"password"];
+    
+    // Should be dismissed
+    [[sutMock expect] dismissWithClickedButtonIndex:1 animated:YES];
+    
+    // "tap OK button"
+    [sutMock tappedButtonAtIndex:1];
+    
+    [sutMock verify];
+}
 
 @end
