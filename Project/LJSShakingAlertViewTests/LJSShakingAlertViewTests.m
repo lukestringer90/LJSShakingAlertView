@@ -25,7 +25,7 @@
 
 - (id)partialMockShakingAlertView:(LJSShakingAlertView *)shakingAlertView stubbedWithSecureTextFieldWithText:(NSString *)secureEntryText {
     id shakingPartialMock = [OCMockObject partialMockForObject:shakingAlertView];
-    id secureTextFieldMock = [OCMockObject mockForClass:[UITextField class]];
+    id secureTextFieldMock = [OCMockObject niceMockForClass:[UITextField class]];
     [[[secureTextFieldMock stub] andReturn:secureEntryText] text];
     [[[shakingPartialMock stub] andReturn:secureTextFieldMock] textFieldAtIndex:0];
     return shakingPartialMock;
@@ -201,6 +201,31 @@
     [sutMock tappedButtonAtIndex:1];
     
     [sutMock verify];
+}
+
+#pragma mark - Clearing text tests
+
+- (void)testClearsSecureTextFieldForIncorrectEntry {
+    _sut = [[LJSShakingAlertView alloc] initWithTitle:@"Title"
+                                              message:@"Message."
+                                           secretText:@"password"
+                                           completion:nil
+                                    cancelButtonTitle:@"Cancel"
+                                     otherButtonTitle:@"OK"];
+    
+    id sutMock = [OCMockObject partialMockForObject:_sut];
+    id secureTextFieldMock = [OCMockObject mockForClass:[UITextField class]];
+    [[[secureTextFieldMock stub] andReturn:@"incorrect-secure-text"] text];
+    [[[sutMock stub] andReturn:secureTextFieldMock] textFieldAtIndex:0];
+    
+    // Text should be cleared
+    [[secureTextFieldMock expect] setText:nil];
+    
+    // "tap OK button"
+    [sutMock tappedButtonAtIndex:1];
+
+    [secureTextFieldMock verify];
+
 }
 
 @end

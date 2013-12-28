@@ -46,14 +46,21 @@
 #pragma mark - SDCAlertViewDelegate
 
 - (BOOL)alertView:(SDCAlertView *)alertView shouldDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
     if ([[self buttonTitleAtIndex:buttonIndex] isEqualToString:self.otherButtonTitle]) {
+        
         UITextField *secureTextField = [self textFieldAtIndex:0];
         BOOL enteredCorrectText = [secureTextField.text isEqualToString:self.secretText];
         if (enteredCorrectText) {
             [self safeCallCompletionHandlerWithTextEntryWasCorrect:YES];
         }
+        else {
+            secureTextField.text = nil;
+        }
         return enteredCorrectText;
+        
     }
+    
     [self safeCallCompletionHandlerWithTextEntryWasCorrect:NO];
     return YES;
 }
