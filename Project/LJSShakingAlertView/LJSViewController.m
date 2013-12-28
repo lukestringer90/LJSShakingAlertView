@@ -9,24 +9,31 @@
 #import "LJSViewController.h"
 #import <LJSShakingAlertView/LJSShakingAlertView.h>
 
-@interface LJSViewController ()
+typedef NS_ENUM(NSInteger, TableViewRow) {
+    TableViewRowShowAlertView,
+    TableViewRowTextEntryStatus,
+    TableViewRowCount
+    
+};
 
+@interface LJSViewController ()
+@property (nonatomic, strong) NSString *entryStatusText;
 @end
 
 @implementation LJSViewController
 
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.entryStatusText = @"n/a (show alert first)";
 }
 
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self showShakingAlertView];
+    if (indexPath.row == TableViewRowShowAlertView) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [self showShakingAlertView];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -36,18 +43,29 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 1;
+	return TableViewRowCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	// Need this so that Obj-C doesn't complain that method does not return from non void function
     static NSString *CellID = @"CellID";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellID];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellID];
     }
     
-    cell.textLabel.text = @"Show LJSShakingAlertView";
+    switch (indexPath.row) {
+        case TableViewRowShowAlertView:
+            cell.textLabel.text = @"Show LJSShakingAlertView";
+            break;
+        case TableViewRowTextEntryStatus:
+            cell.textLabel.text = [NSString stringWithFormat:@"Status: %@", self.entryStatusText];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            break;
+            
+        default:
+            break;
+    }
+    
     
     return cell;
 }
@@ -59,12 +77,8 @@
                                                    message:@"To continue enter a valid password"
                                                 secretText:@"password"
                                                 completion:^(BOOL enteredCorrectText) {
-                                                    if (enteredCorrectText) {
-                                                        NSLog(@"Correct!");
-                                                    }
-                                                    else {
-                                                        NSLog(@"Incorrect");
-                                                    }
+                                                    self.entryStatusText = enteredCorrectText ? @"Entered correct text!": @"Cancelled.";
+                                                    [self.tableView reloadData];
                                                 } cancelButtonTitle:@"Cancel"
                                           otherButtonTitle:@"OK"];
     [alertView show];
